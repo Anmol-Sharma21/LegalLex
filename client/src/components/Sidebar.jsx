@@ -1,9 +1,19 @@
-import React from 'react'
+import { useState } from "react";
+import { CaretLeft, CaretRight } from "phosphor-react";
 
 const Sidebar = () => {
-  return (
-    <div>sidebar</div>
-  )
-}
+  const [show, setShow] = useState(true);
 
-export default Sidebar
+  return (
+    <>
+      <div className={`w-2/12 h-screen border border-pink-300`}>
+        {show && <div className={"bg-slate-500 h-screen"}>Sidebar</div>}
+      </div>
+      <button onClick={() => setShow(!show)}>
+        <CaretLeft size={30} />
+      </button>
+    </>
+  );
+};
+
+export default Sidebar;
