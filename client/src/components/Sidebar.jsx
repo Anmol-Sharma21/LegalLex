@@ -1,18 +1,22 @@
-import { useState } from "react";
-import { CaretLeft, CaretRight } from "phosphor-react";
+import React from "react";
+import Sidebar_Header from "./Sidebar_Header";
+import Sidebar_CardList from "./Sidebar_CardList";
+import Sidebar_Footer from "./Sidebar_Footer";
 
 const Sidebar = () => {
-  const [show, setShow] = useState(true);
-
   return (
-    <>
-      <div className={`w-2/12 h-screen border border-pink-300`}>
-        {show && <div className={"bg-slate-500 h-screen"}>Sidebar</div>}
+    <div className="flex flex-col h-screen w-2/12 transition-all duration-500 ease-in-out ml-0 opacity-100">
+      <div className="sticky top-0 bg-black text-white">
+        {/* Header */}
+        <Sidebar_Header />
       </div>
-      <button onClick={() => setShow(!show)}>
-        <CaretLeft size={30} />
-      </button>
-    </>
+      <div className="flex-grow bg-slate-500 overflow-y-scroll">
+        {/* Body */}
+        <Sidebar_CardList />
+      </div>
+      {/* Footer */}
+      <Sidebar_Footer />
+    </div>
   );
 };
 
