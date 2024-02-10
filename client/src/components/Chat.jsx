@@ -23,7 +23,7 @@ const Chat = () => {
         const formData = new FormData();
         formData.append("pdfFile", file);
 
-        await axios.post("http://your-backend-url/upload", formData, {
+        await axios.post("http://localhost:3000/upload", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -56,7 +56,7 @@ const Chat = () => {
 
   const getBotResponse = async (userMessage) => {
     try {
-      const response = await axios.post("http://your-backend-url/ask", {
+      const response = await axios.post("https://legallex-0yfy.onrender.com/", {
         question: userMessage,
       });
 
