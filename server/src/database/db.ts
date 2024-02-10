@@ -1,4 +1,3 @@
-
 const mongoose = require("mongoose");
 
 const uri = "mongodb+srv://LegalLex_htf:" + encodeURIComponent("legallex@12345") + "@cluster0.xrhjdp0.mongodb.net/LegalLex";

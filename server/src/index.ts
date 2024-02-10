@@ -1,19 +1,23 @@
-import express from 'express';
-import db from './database/db';
+import express from "express";
+import db from "./database/db";
+import { createServer } from "http";
+import Routes from "./routes/routes";
+import cors from "cors";
+import multer from "multer";
 
 
 const app = express();
+const server = createServer(app);
+app.use(cors());
+app.use("/", Routes);
+
+const storage = multer.memoryStorage(); // Use memory storage for simplicity
+const upload = multer({ storage: storage });
 
 const PORT = process.env.PORT || 3000;
 
-app.get('/', (req, res) => { 
-    res.send('Listening');
-})
+server.listen(PORT, () => {
+  console.log(`Listening on port ${PORT}`);
+});
 
-
-
-app.listen(PORT, () => {
-    console.log('listening on port 3000');
-})
-
-db(); // Connect to the database
+db();
