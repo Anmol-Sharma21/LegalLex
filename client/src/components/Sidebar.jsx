@@ -5,7 +5,7 @@ import Sidebar_Footer from "./Sidebar_Footer";
 
 const Sidebar = () => {
   return (
-    <div className="flex flex-col h-screen w-2/12 transition-all duration-500 ease-in-out ml-0 opacity-100">
+    <div className="flex flex-col h-screen w-2/12 transition-all duration-500 ease-in-out ml-0 opacity-100 bg-gradient-to-r from-blue-500 to-purple-500">
       <div className="sticky top-0 bg-black text-white">
         {/* Header */}
         <Sidebar_Header />

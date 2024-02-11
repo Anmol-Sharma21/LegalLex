@@ -7,9 +7,30 @@ const Chat = () => {
   const [inputMessage, setInputMessage] = useState("");
   const [file, setFile] = useState(null);
   const [isUploaded, setIsUploaded] = useState(false);
-
+  
   const fileInputRef = useRef(null);
   const messagesEndRef = useRef(null);
+  
+  const API_KEY = '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';
+  const API_URL = 'https://api.openai.com/v1/chat/completions';
+
+  async function sendMessage(message) {
+    try {
+      const response = await axios.post(API_URL, {
+        model: 'gpt-3.5-turbo',
+        messages: [{ role: 'user', content: message }],
+      }, {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${API_KEY}`,
+        },
+      });
+      return response.data.choices[0].message.content;
+    } catch (error) {
+      console.error('Error sending message:', error);
+      return 'Sorry, an error occurred.';
+    }
+  }
 
   const handleFileChange = (e) => {
     const selectedFile = e.target.files[0];
@@ -47,24 +68,11 @@ const Chat = () => {
     if (inputMessage.trim() === "") return;
 
     const userMessage = { text: inputMessage, type: "user" };
-    const botMessage = await getBotResponse(inputMessage);
+    const botMessage = { text: await sendMessage(inputMessage), type: "bot" };
 
     setMessages((prevMessages) => [...prevMessages, userMessage, botMessage]);
     setInputMessage("");
     scrollToBottom();
-  };
-
-  const getBotResponse = async (userMessage) => {
-    try {
-      const response = await axios.post("https://legallex-0yfy.onrender.com/", {
-        question: userMessage,
-      });
-
-      return { text: `Bot: ${response.data.answer}`, type: "bot" };
-    } catch (error) {
-      console.error("Error getting bot response:", error);
-      return { text: "Bot: Error processing the question", type: "bot" };
-    }
   };
 
   const handleKeyPress = (e) => {
@@ -109,7 +117,7 @@ const Chat = () => {
                 : "text-left text-green-600"
             }`}
           >
-            {`You: ${message.text}`}
+            {`${message.type === "user" ? "You" : "Bot"}: ${message.text}`}
           </div>
         ))}
         <div ref={messagesEndRef} />
@@ -122,7 +130,7 @@ const Chat = () => {
           onChange={(e) => setInputMessage(e.target.value)}
           onKeyPress={handleKeyPress}
           className="flex-grow p-2 border rounded-l-md focus:outline-none"
-          placeholder="Type your legal question..."
+          placeholder="Type your message..."
         />
         <button
           onClick={handleSendMessage}

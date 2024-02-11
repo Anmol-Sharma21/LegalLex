@@ -1,7 +1,7 @@
-// src/routes/routes.ts
 import { Router, Request, Response } from "express";
 import multer from "multer";
 import pdfParse from "pdf-parse";
+import fs from 'fs'
 
 const router = Router();
 const upload = multer({ dest: "uploads/" });
@@ -10,27 +10,37 @@ router.get("/", (req: Request, res: Response) => {
   res.send("Hello, this is the root route!");
 });
 
+
 router.post(
   "/upload",
   upload.single("pdfFile"),
   async (req: Request, res: Response) => {
     try {
-      const file = req.file;
+      let file = req.file;
+      console.log(req.file);
+      
       if (!file) {
         return res.status(400).json({ error: "No file uploaded." });
       }
 
-      const dataBuffer = await pdfParse({
-        content: Buffer.from(file.buffer).toString("base64"),
-      } as pdfParse.DataBuffer);
+      const _file = fs.readFileSync(file.path);
 
-      if (dataBuffer instanceof Error) {
-        console.error("Error parsing PDF:", dataBuffer.message);
-        console.error(dataBuffer.stack);
+      // Convert base64 string to buffer
+      // const buffer = Buffer.from(_file.buffer?.toString("base64"), "base64");
+
+      // Parse PDF from buffer
+      const pdfData = await pdfParse(_file, {});
+
+      if (pdfData instanceof Error) {
+        console.error("Error parsing PDF:", pdfData.message);
+        console.error(pdfData.stack);
         return res.status(500).json({ error: "Error parsing PDF." });
       }
 
       console.log(`PDF parsed successfully: ${file.originalname}`);
+
+      // Now you can access the parsed PDF data using pdfData.text
+      console.log("PDF text:", pdfData.text);
 
       // Handle the uploaded file (e.g., save it to disk or process it further)
       // For now, we'll just respond with a success message
